@@ -38,10 +38,15 @@ local opts = { noremap = true }
 --keymap('n', '<c-k>', 'c-w>k', opts)
 --keymap('n', '<c-l>', 'c-w>l', opts)
 
-
 ---------------------------------
 --Packer isntallation and Plugins
 ---------------------------------
+local fn = vim.fn
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+if fn.empty(fn.glob(install_path)) > 0 then
+  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+end
+
 require('packer').startup(function()
     use 'wbthomason/packer.nvim'
     use 'ellisonleao/gruvbox.nvim'
@@ -68,7 +73,13 @@ require('packer').startup(function()
       {'rafamadriz/friendly-snippets'},
     }
   }
+    -- Put this at the end after all plugins
+      if packer_bootstrap then
+         require('packer').sync()
+        end
 end)
+
+
 
 local lsp = require('lsp-zero')
 
